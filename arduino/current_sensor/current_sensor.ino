@@ -1,10 +1,11 @@
 #define CURRENT_SENSOR A0
 #define VOLTAGE_SENSOR A2
 
+float current = 0;
+
 void setup() {
     pinMode(CURRENT_SENSOR, INPUT);
     pinMode(VOLTAGE_SENSOR, INPUT);
-    pinMode(MOTOR_PIN, OUTPUT);
 
     Serial.begin(9600);
 }
@@ -12,7 +13,8 @@ void setup() {
 void loop() {
     float current_raw = analogRead(CURRENT_SENSOR);
     float voltage_raw = analogRead(VOLTAGE_SENSOR);
-    float current = (current_raw-550)/0.0322;
+    if (current_raw>=550) current = (current_raw-550)*0.0322;
+    else current = 0;
     send_data(1, voltage_raw, current, current_raw, 0);
 }
 
