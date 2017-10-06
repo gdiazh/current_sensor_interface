@@ -12,7 +12,7 @@ void setup() {
 void loop() {
     float current_raw = analogRead(CURRENT_SENSOR);
     float voltage_raw = analogRead(VOLTAGE_SENSOR);
-    float current = current_raw/100.0;
+    float current = (current_raw-550)/0.0322;
     send_data(1, voltage_raw, current, current_raw, 0);
 }
 
