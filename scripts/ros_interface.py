@@ -16,7 +16,6 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Float32MultiArray
 from usb_receiver import usbReceiver
 from file_manager import fileManager
-from command_parser import CommandParser
 
 class USBRosInterface:
     def __init__(self, test_name):
@@ -26,7 +25,6 @@ class USBRosInterface:
         self.baud = 9600
         self.usb_receiver = usbReceiver(self.port, self.baud, debug = False)
         self.file_manager = fileManager(test_name, debug = False)
-        self.command_parser = CommandParser()
         self.power_sum = 0
 
     def initialize(self):
