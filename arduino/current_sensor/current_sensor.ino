@@ -1,7 +1,8 @@
 #define CURRENT_SENSOR A0
-#define VOLTAGE_SENSOR A2
+#define VOLTAGE_SENSOR A1
 
 float current = 0;
+float voltage = 0;
 
 void setup() {
     pinMode(CURRENT_SENSOR, INPUT);
@@ -13,9 +14,11 @@ void setup() {
 void loop() {
     float current_raw = analogRead(CURRENT_SENSOR);
     float voltage_raw = analogRead(VOLTAGE_SENSOR);
-    if (current_raw>=512) current = (current_raw-512)*0.0488;
+    if (current_raw>=550) current = (current_raw-550)*0.0322;
     else current = 0;
-    send_data(1, voltage_raw, current, current_raw, 0);
+    if (voltage_raw>=164) voltage = (voltage_raw-164)*0.025;
+    else voltage = 0;
+    send_data(1, voltage_raw, current, current_raw, voltage);
 }
 
 void sendFrame(uint8_t frame[], uint8_t sz)
