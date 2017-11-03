@@ -3,22 +3,33 @@
 
 float current = 0;
 float voltage = 0;
+float sum = 0;
+float coef = 0;
+float Q0 = 1;//Ah
+float Qt = 0;//Ah
+unsigned long time;
+
 
 void setup() {
     pinMode(CURRENT_SENSOR, INPUT);
     pinMode(VOLTAGE_SENSOR, INPUT);
 
+
     Serial.begin(9600);
 }
 
 void loop() {
+    time = millis();
     float current_raw = analogRead(CURRENT_SENSOR);
     float voltage_raw = analogRead(VOLTAGE_SENSOR);
     if (current_raw>=550) current = (current_raw-550)*0.0322;
     else current = 0;
     if (voltage_raw>=164) voltage = (voltage_raw-164)*0.025;
     else voltage = 0;
-    send_data(1, voltage_raw, current, current_raw, voltage);
+    Qt= Qt+ ((current*(millis()-time))/360000);//Ah
+    sum = sum + (voltage*current*(millis()-time));
+    coef = (1-(Qt/Q0))*100;//por revisar
+    send_data(1, sum, current, coef, voltage);
 }
 
 void sendFrame(uint8_t frame[], uint8_t sz)
