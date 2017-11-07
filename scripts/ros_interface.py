@@ -37,9 +37,9 @@ class USBRosInterface:
         # Create subs, services, publishers, threads
         self.running = True
         #publishers
-        self.data1_pub = rospy.Publisher('/sum', Float32, queue_size=70)
+        self.data1_pub = rospy.Publisher('/transfer_energy', Float32, queue_size=70)
         self.data2_pub = rospy.Publisher('/current', Float32, queue_size=70)
-        self.data3_pub = rospy.Publisher('/coef', Float32, queue_size=70)
+        self.data3_pub = rospy.Publisher('/soc', Float32, queue_size=70)
         self.data4_pub = rospy.Publisher('/voltage', Float32, queue_size=70)
         self.sum_power_pub = rospy.Publisher('/sum_power', Float32, queue_size=70)
         Thread(target=self.update_state).start()
@@ -64,7 +64,7 @@ class USBRosInterface:
                 if packet[0] == 1:
                     #publish data
                     data = self.file_manager.decode(packet)
-                    self.data1_pub.publish(data[0])
+                    self.data1_pub.publish(data[0]/360)#temporal/360
                     self.data2_pub.publish(data[1])
                     self.data3_pub.publish(data[2])
                     self.data4_pub.publish(data[3])

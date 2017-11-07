@@ -3,10 +3,10 @@
 
 float current = 0;
 float voltage = 0;
-float sum = 0;
-float coef = 0;
-float Q0 = 1;//Ah
-float Qt = 0;//Ah
+float transfer_energy = 0;
+float SOC = 0;
+float Q0 = 5040;//As
+float Qt = 0;//As
 unsigned long time;
 
 
@@ -26,10 +26,10 @@ void loop() {
     else current = 0;
     if (voltage_raw>=164) voltage = (voltage_raw-164)*0.025;
     else voltage = 0;
-    Qt= Qt+ ((current*(millis()-time))/360000);//Ah
-    sum = sum + (voltage*current*(millis()-time));
-    coef = (1-(Qt/Q0))*100;//por revisar
-    send_data(1, sum, current, coef, voltage);
+    Qt= Qt+ ((current*(millis()-time))/1000);//As
+    transfer_energy = transfer_energy + (voltage*current*(millis()-time)/1000);//Ws
+    SOC = (1-(Qt/Q0))*100;//por revisar
+    send_data(1, transfer_energy, current, SOC, voltage);
 }
 
 void sendFrame(uint8_t frame[], uint8_t sz)
@@ -39,9 +39,9 @@ void sendFrame(uint8_t frame[], uint8_t sz)
 
 uint8_t checksum(uint8_t *packet, uint8_t n)
 {
-    uint32_t sum = 0;
-    for (int j=0;j<n-1;j++) sum += packet[j];
-    return sum & 0x00FF;
+    uint32_t transfer_energy = 0;
+    for (int j=0;j<n-1;j++) transfer_energy += packet[j];
+    return transfer_energy & 0x00FF;
 }
 
 void bytesEncode(float number, uint8_t encode_bytes[])

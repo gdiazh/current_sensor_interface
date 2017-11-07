@@ -118,7 +118,7 @@ class fileManager(object):
         number4_elements = self.getNumberElements(packet[10], packet[11], packet[12])
         data4 = self.saturate(self.getNumber(number4_elements), 0, 3000, number4_elements, 4)
 
-        return [data1, data2, data3, data4]
+        return [data1/360, data2, data3, data4]
 
     def to_file(self, data, sz):
         self.data_file = open(self.full_name, "ab+")
